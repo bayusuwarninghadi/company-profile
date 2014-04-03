@@ -75,6 +75,9 @@ $route['admin/email/(:any)'] = 'admin/cemail/pages/$1';
 $route['admin/slider'] = 'admin/cslider/pages';
 $route['admin/slider/(:any)'] = 'admin/cslider/pages/$1';
 
+$route['admin/gallery'] = 'admin/cgallery/pages';
+$route['admin/gallery/(:any)'] = 'admin/cgallery/pages/$1';
+
 $route['admin/category'] = 'admin/ccategory/pages';
 $route['admin/category/(:any)'] = 'admin/ccategory/pages/$1';
 

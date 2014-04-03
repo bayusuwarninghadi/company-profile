@@ -194,13 +194,23 @@ hr.line2:after {
 .right { text-align: right}
 
 .blue, .blue h1, .blue h2 {
-    background: #272727;
-    color: #fff
+	background: #59c5f7;
+	color: #fff
 }
-.blue a {
+
+.purple, .purple h1, .purple h2 {
+	background: #93466A;
+	color: #fff
+}
+.darkgray, .darkgray h1, .darkgray h2 {
+	background: #59c5f7;
+	color: #fff
+}
+
+.darkgray a, .purple a, .blue a {
     color: #111;
 }
-.blue a:hover {
+.darkgray a:hover,.purple a:hover, .blue a:hover {
     color: #222;
 }
 

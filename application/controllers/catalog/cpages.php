@@ -15,13 +15,24 @@ class CPages extends General
         $data['slider'] = (Array)$this->slider->listAll();
 
         $this->load->model('product');
-	    (Array)$this->product->SetPageLength(15);
+	    $this->product->SetPageLength(15);
 	    $data['new_product'] = (Array)$this->product->doSearch();
 
-        $page = (Array)$this->pages->findByid('42');
-        $data['promo'] = $page[0];
+	    $page = (Array)$this->pages->findByid('42');
+	    $data['promo'] = $page[0];
 
-        $this->doView('home', $data);
+	    $page = (Array)$this->pages->findByName('home_article');
+	    $data['homearticle'] = $page[0];
+
+	    $this->load->model('gallery');
+	    $album = (Array)$this->gallery->listAll();
+	    $lates_album = $album[0];
+	    $config = array(
+		    'path' => 'images/gallery/' . $lates_album->pk_i_id
+	    );
+	    $this->load->model('fupload', '', false, $config);
+	    $data['images'] = $this->fupload->get_images();
+	    $this->doView('home', $data);
     }
 
     public function about()

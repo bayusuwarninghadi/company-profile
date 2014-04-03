@@ -62,7 +62,38 @@ header .search button {
 	line-height: 20px;
 }
 
+.navbar-home {
+	background: #eee;
+	height: 40px;
+	position: absolute;
+	margin-top: -35px;
+	width: 100%;
+	z-index: 2;
+	border-bottom: 1px solid #ccc;
+}
 
+.navbar-home.fixed {
+	position: fixed;
+	top: 82px;
+	z-index: 3;
+}
+
+
+.navbar-home .navbar-home-menu {
+	display: inline-block;
+	line-height: 20px;
+	padding: 10px 20px;
+	color: #111;
+	cursor: pointer;
+}
+
+.navbar-home .navbar-home-menu:hover {
+	background: #111;
+	color: #fff;
+}
+.home-box {
+	padding: 80px 10px;
+}
 .navbar {
 	position: absolute;
 	z-index: 10;
@@ -462,3 +493,4 @@ footer a {
 	top: -5px;
 	right: -5px;
 }
+

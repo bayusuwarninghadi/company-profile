@@ -23,13 +23,19 @@
                     <div class="smaller">Article</div>
                 </a>
             </div>
-            <div class="menu">
-                <a class="link transition" href="/admin/slider" title="slider">
-                    <div class="icon-picture"></div>
-                    <div class="smaller">Slider</div>
-                </a>
-            </div>
-            <div class="menu">
+	        <div class="menu">
+		        <a class="link transition" href="/admin/slider" title="slider">
+			        <div class="icon-picture"></div>
+			        <div class="smaller">Slider</div>
+		        </a>
+	        </div>
+	        <div class="menu">
+		        <a class="link transition" href="/admin/gallery" title="slider">
+			        <div class="icon-camera"></div>
+			        <div class="smaller">Album</div>
+		        </a>
+	        </div>
+	        <div class="menu">
                 <a class="link transition" href="/admin/pages" title="Pages">
                     <div class="icon-edit-sign"></div>
                     <div class="smaller">Pages</div>

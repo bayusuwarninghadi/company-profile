@@ -31,7 +31,7 @@ class Cslider extends CAdmin
                         $msg = 'Item successfully posted';
                         $redirect = '/admin/slider/edit?id=' . $data['pk_i_id'];
                         if ($_FILES['s_image'] && $data['pk_i_id']) {
-                            $upload = $this->fupload->do_upload($data['pk_i_id'], 's_image', 1000, 1000);
+                            $upload = $this->fupload->do_upload($data['pk_i_id'], 's_image', true, 1000, 1000);
                             if ($upload) {
                                 $data['s_image'] = $upload['file_name'];
                                 $data['dt_modified'] = date('Y-m-d H:i:s');
@@ -61,7 +61,7 @@ class Cslider extends CAdmin
                     $data = array_merge($data, $post_);
                     if ($_FILES['s_image']) {
 	                    // image_name, image_folder, file_param
-                        $upload = $this->fupload->do_upload($data['pk_i_id'], 's_image', 1000, 500);
+                        $upload = $this->fupload->do_upload($data['pk_i_id'], 's_image',true, 1000, 1000);
 
 	                    if ($upload) {
                             $data['s_image'] = $upload['file_name'];

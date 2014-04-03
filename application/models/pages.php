@@ -24,13 +24,19 @@ class Pages extends CI_Model
         return $query;
     }
 
-    function findByid($id)
-    {
-        $query = $this->db->query(sprintf("SELECT * FROM %s WHERE pk_i_id='%s'", $this->table, $id));
-        return $query->result();
-    }
+	function findByid($id)
+	{
+		$query = $this->db->query(sprintf("SELECT * FROM %s WHERE pk_i_id='%s'", $this->table, $id));
+		return $query->result();
+	}
 
-    function updateById($data = array())
+	function findByName($name)
+	{
+		$query = $this->db->query(sprintf("SELECT * FROM %s WHERE s_name='%s'", $this->table, $name));
+		return $query->result();
+	}
+
+	function updateById($data = array())
     {
         $query = $this->db->query(sprintf("
             UPDATE %s SET s_name='%s', s_body='%s' , dt_modified= '%s'  WHERE pk_i_id='%s'",
