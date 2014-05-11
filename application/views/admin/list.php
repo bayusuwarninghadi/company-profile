@@ -1,5 +1,27 @@
 <?
 switch ($list) {
+    case 'article':
+        foreach ($pages as $page) {
+            ?>
+            <tr class="item">
+                <td>
+                    <a target="blank" href="<?php echo '/article?id=' . $page->pk_i_id?>" class="bold">
+                        <?php echo $page->s_name?>
+                    </a>
+
+                    <div class="desc"><?php echo substr(strip_tags(html_entity_decode($page->s_body)), 0, 150)?></div>
+                </td>
+                <td><a href="<?php echo '/admin/article/edit?id=' . $page->pk_i_id?>">Edit</a></td>
+                <td>
+                    <a onclick="if (confirm('Are you sure you want delete this from database?')) {location.href = this.href} return false;"
+                       href="<?php echo '/admin/article/delete?id=' . $page->pk_i_id?>">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        <?
+        }
+        break;
 	case 'product':
 		foreach ($pages as $page) {
 			?>

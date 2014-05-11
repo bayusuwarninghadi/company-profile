@@ -1,99 +1,158 @@
-<div class="container white round2 shadow wood-pattern">
-	<div class="pad1">
-		<?php if ($id) { ?>
-		<div class="article">
-		    <? if ($page->i_level == 2 && !$isLogin) {?>
-				<div class="center">
-					<h2>Access Denied</h2>
-					<hr>
-					<div>
-						please <a href="/login">Sign Up</a> to continue read this article
-					</div>
-				</div>
-			<?} else {?>
-			<div class="fleft" style="width: 30%; position: relative;">
-				<img class="image-preview" data-zoom-image="/images/product/<?=$page->s_image?>"
-				     src="/images/product/thumbs/<?=$page->s_image?>" alt="" style="max-width: 100%">
+<div class="col-md-3">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Search</h3>
+        </div>
 
-				<div id="navigator" class="navigator">
-					<?if ($page->s_image) { ?>
-					<a href="#" data-zoom-image="/images/product/<?=$page->s_image?>"
-					   data-image="/images/product/thumbs/<?=$page->s_image?>">
-						<div class="img-thumb active"
-						     style="background-image: url('/images/product/thumbs/<?=$page->s_image?>')"></div>
-					</a>
-					<? }?>
-					<?if ($page->s_image2) { ?>
-					<a href="#" data-zoom-image="/images/product/<?=$page->s_image2?>"
-					   data-image="/images/product/thumbs/<?=$page->s_image2?>">
-						<div class="img-thumb"
-						     style="background-image: url('/images/product/thumbs/<?=$page->s_image2?>')"></div>
-					</a>
-					<? }?>
-					<?if ($page->s_image3) { ?>
-					<a href="#" data-zoom-image="/images/product/<?=$page->s_image3?>"
-					   data-image="/images/product/thumbs/<?=$page->s_image3?>">
-						<div class="img-thumb"
-						     style="background-image: url('/images/product/thumbs/<?=$page->s_image3?>')"></div>
-					</a>
-					<? }?>
+        <div class="panel-body">
+            <form class="search product" action="/product" method="post">
+                <input type="hidden" value="<?=$page?>" name="page">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="s_key" value="<?=$s_key?>" placeholder="Search...">
+                </div>
+                <div class="form-group">
+                    <? function create_location_combobox($_locs = array(), $_selected = ''){ ?>
+                        <?php foreach ($_locs as $_loc) { ?>
+                            <option <? if ($_selected == $_loc['pk_i_id']) echo 'selected="selected"'?>
+                                data-url='<?php echo $_loc['s_url']?>'
+                                onclick="$('.form').attr('action',)"
+                                value='<?php echo $_loc['pk_i_id']?>'>
+                                <?=str_repeat("&nbsp;&nbsp;&nbsp;", $_loc['i_depth'])?> <?php echo $_loc['s_name']?>
+                            </option>
+                            <? if ($_loc['sub']) echo create_location_combobox($_loc['sub'], $_selected);?>
+                        <?php } ?>
+                    <? } ?>
 
-					<?if ($page->s_image4) { ?>
-					<a href="#" data-zoom-image="/images/product/<?=$page->s_image4?>"
-					   data-image="/images/product/thumbs/<?=$page->s_image4?>">
-						<div class="img-thumb"
-						     style="background-image: url('/images/product/thumbs/<?=$page->s_image4?>')"></div>
-					</a>
-					<? }?>
-					<div class="clear"></div>
-				</div>
-			</div>
-			<div class="fright desc" style="width: 70%">
-				<div class="mar01">
-					<h1><?php echo $page->s_name?></h1>
+                    <select name="fk_i_loc_id" class="form-control">
+                        <option selected="selected" value=''>Select Location</option>
+                        <?=create_location_combobox($locations, $loc)?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <? function create_combobox_view($_cats = array(), $_selected = ''){ ?>
+                        <?php foreach ($_cats as $_cat) { ?>
+                            <option <? if ($_selected == $_cat['pk_i_id']) echo 'selected="selected"'?>
+                                data-url='<?php echo $_cat['s_url']?>'
+                                onclick="$('.form').attr('action',)"
+                                value='<?php echo $_cat['pk_i_id']?>'>
+                                <?=str_repeat("&nbsp;&nbsp;&nbsp;", $_cat['i_depth'])?> <?php echo $_cat['s_name']?>
+                            </option>
+                            <? if ($_cat['sub']) echo create_combobox_view($_cat['sub'], $_selected);?>
+                        <?php } ?>
+                    <? } ?>
 
-					<?php echo $page->s_body;?>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<? } ?>
-		</div>
-		<a href="/product"><input type="submit" value="<< back to home"></a>
-		<?php } else { ?>
-		<div class="fright" style="width: 25%">
-			<form class="search product" action="<?=$_SERVER['REQUEST_URI']?>" method="post">
-				<input type="hidden" value="<?=$page?>" name="page">
+                    <select name="fk_i_cat_id" class="form-control fk_i_cat_id">
+                        <option selected="selected" value='' data-url="">Select Category</option>
+                        <?=create_combobox_view($categories, $cat)?>
+                    </select>
 
-				<div class="line">
-					<div>Search</div>
-					<hr>
-					<input type="text" name="s_key" value="<?=$s_key?>" style="width: 100%; min-width: 0;"
-					       placeholder="Search...">
-					<button type="submit"><i class="icon-search"></i></button>
-				</div>
+                    <script type="application/javascript">
+                        $('select.fk_i_cat_id').change(function(){
+                            $('form.search.product').attr('action','/product'+ $(this).find('option:selected').data('url'))
+                        })
+                    </script>
 
-			</form>
-			<div class="line">
-				<div>Recent Post</div>
-				<hr>
-				<? foreach ($recent_product as $page) { ?>
-				<a href="<?php echo '/product?id=' . $page->pk_i_id?>">
-					<h4><?php echo $page->s_name?>
-						<small><?php echo substr(strip_tags(html_entity_decode($page->s_body)), 0, 50)?>
-							... <?=format_date($page->dt_modified)?></small>
-					</h4>
+                </div>
+                <button class="btn btn-default" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Recent Post</h3>
+        </div>
 
-				</a>
-				<? }?>
-			</div>
+        <div class="panel-body">
+            <? foreach ($recent_product as $p) { ?>
+                <a href="<?php echo '/product?id=' . $p->pk_i_id?>">
+                    <h5><?php echo $p->s_name?>
+                        <small><?php echo substr(strip_tags(html_entity_decode($p->s_body)), 0, 50)?>
+                            ... <?=format_date($p->dt_modified)?></small>
+                    </h5>
 
-		</div>
-		<div class="items-table fleft" style="width: 70%">
-			<? $this->load->view('catalog/list')?>
-		</div>
-		<div class="clear"></div>
-		<div class='load-more'>Load More</div>
-		<?php }?>
-		<div class="clear"></div>
-	</div>
+                </a>
+            <? }?>
+        </div>
+    </div>
+
+</div>
+<div class="col-md-9">
+<?php if ($id) { ?>
+    <ol class="breadcrumb">
+        <?=$breadcrumb?>
+        <li class="active"><?=$article->s_name?></li>
+    </ol>
+
+    <? if ($article->i_level == 2 && !$isLogin) {?>
+        <div class="center">
+            <h2>Access Denied</h2>
+            <hr>
+            <div>
+                please <a href="/login">Sign Up</a> to continue read this article
+            </div>
+        </div>
+    <?} else {?>
+    <div>
+        <img class="image-preview" data-zoom-image="/images/product/<?=$article->s_image?>"
+             src="/images/product/thumbs/<?=$article->s_image?>" alt="" style="max-width: 100%">
+
+        <div id="navigator" class="navigator">
+            <?if ($article->s_image) { ?>
+            <a href="#" data-zoom-image="/images/product/<?=$article->s_image?>"
+               data-image="/images/product/thumbs/<?=$article->s_image?>">
+                <div class="img-thumb active"
+                     style="background-image: url('/images/product/thumbs/<?=$article->s_image?>')"></div>
+            </a>
+            <? }?>
+            <?if ($article->s_image2) { ?>
+            <a href="#" data-zoom-image="/images/product/<?=$article->s_image2?>"
+               data-image="/images/product/thumbs/<?=$article->s_image2?>">
+                <div class="img-thumb"
+                     style="background-image: url('/images/product/thumbs/<?=$article->s_image2?>')"></div>
+            </a>
+            <? }?>
+            <?if ($article->s_image3) { ?>
+            <a href="#" data-zoom-image="/images/product/<?=$article->s_image3?>"
+               data-image="/images/product/thumbs/<?=$article->s_image3?>">
+                <div class="img-thumb"
+                     style="background-image: url('/images/product/thumbs/<?=$article->s_image3?>')"></div>
+            </a>
+            <? }?>
+
+            <?if ($article->s_image4) { ?>
+            <a href="#" data-zoom-image="/images/product/<?=$article->s_image4?>"
+               data-image="/images/product/thumbs/<?=$article->s_image4?>">
+                <div class="img-thumb"
+                     style="background-image: url('/images/product/thumbs/<?=$article->s_image4?>')"></div>
+            </a>
+            <? }?>
+        </div>
+    </div>
+    <div class="desc">
+        <h1><?php echo $article->s_name?></h1>
+        <?php echo $article->s_body;?>
+    </div>
+    <? } ?>
+    <a href="/product" class="btn btn-danger"><< back to home</a>
+<?php } else { ?>
+    <?if ($product) { ?>
+        <div class="items-table">
+        <? $this->load->view('catalog/list'); ?>
+        </div>
+
+        <center>
+            <button class='btn btn-info load-more'>Load More</button>
+        </center>
+    <? } else {?>
+        <div class="product panel panel-info">
+            <div class="panel-heading">
+                No List Found
+            </div>
+
+            <div class="panel-body">
+                <center>No List Found</center>
+            </div>
+        </div>
+    <?}?>
+<?php }?>
 </div>

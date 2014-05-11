@@ -18,8 +18,10 @@ class CProduct extends CAdmin
 		switch ($data['act']) {
 			case 'new':
 				$post_ = $this->input->post();
-				$this->load->model('category');
-				$data['categories'] = $this->category->getCategories();
+                $this->load->model('category');
+                $data['categories'] = $this->category->getCategories();
+                $this->load->model('location');
+                $data['locations'] = $this->location->getLocations();
 				if ($post_) {
 					$post_ = $this->prepareData($post_);
 					$data = array_merge($data, $post_);
@@ -67,7 +69,8 @@ class CProduct extends CAdmin
 					$this->session->set_userdata(array('adminMessage' => $msg));
 					header("Location: " . $redirect);
 				}
-				$data['fk_i_cat_id'] = '';
+                $data['fk_i_cat_id'] = '';
+                $data['fk_i_loc_id'] = '';
 				$data['s_color'] = array();
 				$data['s_size'] = array();
 				$data['title'] = 'Add New product';
@@ -78,7 +81,9 @@ class CProduct extends CAdmin
 				$post_ = $this->input->post();
 				$this->load->model('category');
 				$data['categories'] = $this->category->getCategories();
-				if ($post_) {
+                $this->load->model('location');
+                $data['locations'] = $this->location->getLocations();
+                if ($post_) {
 					$post_ = $this->prepareData($post_);
 					$data = array_merge($data, $post_);
 
@@ -132,7 +137,8 @@ class CProduct extends CAdmin
 					return;
 				}
 				$data['page'] = $page[0];
-				$data['fk_i_cat_id'] = $data['page']->fk_i_cat_id;
+                $data['fk_i_cat_id'] = $data['page']->fk_i_cat_id;
+                $data['fk_i_loc_id'] = $data['page']->fk_i_loc_id;
 				$data['title'] = $page[0]->s_name;
 				$data['s_color'] = (array)explode(',', $data['page']->s_color);
 				$data['s_size'] = (array)explode(',', $data['page']->s_size);
@@ -179,10 +185,12 @@ class CProduct extends CAdmin
 				break;
 			default:
 				$data['s_color'] = (array)$this->input->post('s_color');
-				$this->load->model('category');
-				$data['categories'] = $this->category->getCategories();
+                $this->load->model('category');
+                $data['categories'] = $this->category->getCategories();
+                $this->load->model('location');
+                $data['locations'] = $this->location->getLocations();
 
-				$data['page'] = $this->input->post('page');
+                $data['page'] = $this->input->post('page');
 				if (!is_numeric($data['page']) || $data['page'] == '' || $data['page'] < 1) $data['page'] = 1;
 				$this->product->setPage($data['page']);
 
@@ -190,10 +198,15 @@ class CProduct extends CAdmin
 					$this->product->setColor($data['s_color']);
 				}
 
-				$data['fk_i_cat_id'] = $this->input->post('fk_i_cat_id');
-				if ($data['fk_i_cat_id']) {
-					$this->product->setCat($data['fk_i_cat_id']);
-				}
+                $data['fk_i_cat_id'] = $this->input->post('fk_i_cat_id');
+                if ($data['fk_i_cat_id']) {
+                    $this->product->setCat($data['fk_i_cat_id']);
+                }
+
+                $data['fk_i_loc_id'] = $this->input->post('fk_i_loc_id');
+                if ($data['fk_i_loc_id']) {
+                    $this->product->setCat($data['fk_i_loc_id']);
+                }
 
 				$data['s_size'] = (array)$this->input->post('s_size');
 				if (isset($data['s_size'])) {
@@ -237,8 +250,9 @@ class CProduct extends CAdmin
 		$data['s_body'] = $this->input->post('s_body');
 		$data['i_stok'] = is_numeric($this->input->post('i_stok')) ? $this->input->post('i_stok') : 0;
 		$data['i_level'] = is_numeric($this->input->post('i_level')) ? $this->input->post('i_level') : 1;
-		$data['fk_i_cat_id'] = $this->input->post('fk_i_cat_id');
-		return $data;
+        $data['fk_i_cat_id'] = $this->input->post('fk_i_cat_id');
+        $data['fk_i_loc_id'] = $this->input->post('fk_i_loc_id');
+        return $data;
 	}
 }
 

@@ -4,7 +4,8 @@ class Product extends CI_Model
 
 	private $table;
 
-	private $cat;
+    private $cat;
+    private $loc;
 	private $key;
 	private $color;
 	private $size;
@@ -20,10 +21,14 @@ class Product extends CI_Model
 		$this->table = 't_product';
 	}
 
-	public function setCat($cat)
-	{
-		$this->cat = $cat;
-	}
+    public function setCat($cat)
+    {
+        $this->cat = $cat;
+    }
+    public function setLoc($loc)
+    {
+        $this->loc = $loc;
+    }
 
 	public function setLevel($level)
 	{
@@ -94,38 +99,51 @@ class Product extends CI_Model
 		return $query->result();
 	}
 
+    function listAllbyLoc($loc = '', $page = 0, $order = 'dt_modified')
+    {
+        $page = $page * 10;
+        $query = $this->db->query(sprintf("SELECT * FROM %s WHERE fk_i_loc_id like '%s%%' AND i_type='2' ORDER BY %s DESC LIMIT %d,10", $this->table, $loc, $order, $page));
+        return $query->result();
+    }
+
 	function doSearch()
 	{
 		$sqlpush = array();
 
-		if ($this->cat) {
-			if (is_array($this->cat)) {
-				$this->cat = implode(',', $this->cat);
-			}
-			array_push($sqlpush, sprintf("fk_i_cat_id IN (%s)", $this->cat));
-		}
-		if ($this->id) {
-			array_push($sqlpush, sprintf("pk_i_id = %d", $this->id));
+        if ($this->cat) {
+            if (is_array($this->cat)) {
+                $this->cat = implode(',', array_filter($this->cat));
+            }
+            array_push($sqlpush, sprintf("a.fk_i_cat_id IN (%s)", $this->cat));
+        }
+        if ($this->loc) {
+            if (is_array($this->loc)) {
+                $this->loc = implode(',', array_filter($this->loc));
+            }
+            array_push($sqlpush, sprintf("a.fk_i_loc_id IN (%s)", $this->loc));
+        }
+        if ($this->id) {
+			array_push($sqlpush, sprintf("a.pk_i_id = %d", $this->id));
 		}
 
 		if ($this->level) {
 			if (is_array($this->level)) {
 				$this->level = implode(',', $this->level);
 			}
-			array_push($sqlpush, sprintf("i_level IN (%s)", $this->level));
+			array_push($sqlpush, sprintf("a.i_level IN (%s)", $this->level));
 		}
 
 		if ($this->key) {
-			array_push($sqlpush, sprintf("MATCH(s_name, s_body) AGAINST ('%s' IN BOOLEAN MODE)", $this->key));
+			array_push($sqlpush, sprintf("MATCH(a.s_name, a.s_body) AGAINST ('%s' IN BOOLEAN MODE)", $this->key));
 		}
 		if ($this->b_sale) {
-			array_push($sqlpush, "i_sale <> 0");
+			array_push($sqlpush, "a.i_sale <> 0");
 		}
 		if ($this->color) {
 			$color_ = array();
 			foreach ($this->color as $color) {
 				if ($color != '') {
-					array_push($color_, sprintf("s_color like '%%%s%%'", $color));
+					array_push($color_, sprintf("a.s_color like '%%%s%%'", $color));
 				}
 			}
 			if (!empty($color_)) {
@@ -138,7 +156,7 @@ class Product extends CI_Model
 			$size_ = array();
 			foreach ($this->size as $size) {
 				if ($size != '') {
-					array_push($size_, sprintf("s_size like '%%%s%%'", $size));
+					array_push($size_, sprintf("a.s_size like '%%%s%%'", $size));
 				}
 			}
 			if (!empty($size_)) {
@@ -150,14 +168,17 @@ class Product extends CI_Model
 		if (!is_numeric($this->pageLength)) $this->pageLength = 10;
 		if (!is_numeric($this->page) || is_numeric($this->page) < 1) {
 			$this->page = 1;
-		}
-		$this->page = ($this->page - 1) * $this->pageLength;
 
-		$sqlpush = $sqlpush ? 'WHERE ' . implode(' AND ', $sqlpush) : '';
+		}
+
+        $sqlpush = $sqlpush ? 'WHERE ' . implode(' AND ', $sqlpush) : '';
 
 		$sql = sprintf("
-            SELECT * FROM %s %s ORDER BY %s DESC LIMIT %d,%d",
-			$this->table, $sqlpush, $this->order, $this->page, $this->pageLength
+            SELECT a.*, b.s_name s_cat_name, b.s_url s_cat_url FROM %s a
+            JOIN %s b ON a.fk_i_cat_id = b.pk_i_id
+            %s
+            ORDER BY %s DESC LIMIT %d,%d",
+            $this->table, 't_category', $sqlpush, $this->order, ($this->page - 1) * $this->pageLength, $this->pageLength
 		);
 		$query = $this->db->query($sql);
 		return $query->result();
@@ -166,8 +187,8 @@ class Product extends CI_Model
 	function updateById($data = array())
 	{
 		$query = $this->db->query(sprintf("
-            UPDATE %s SET s_name='%s', s_slug='%s', s_body='%s', i_price=%d, i_sale=%d, s_color = '%s', s_size = '%s', i_stok=%d, dt_modified= '%s', fk_i_cat_id='%s',  i_level='%s'  WHERE pk_i_id='%s'",
-			$this->table, $data['s_name'], $data['s_slug'], $data['s_body'], $data['i_price'], $data['i_sale'], $data['s_color'], $data['s_size'], $data['i_stok'], $data['dt_modified'], $data['fk_i_cat_id'], $data['i_level'], $data['pk_i_id']
+            UPDATE %s SET s_name='%s', s_slug='%s', s_body='%s', i_price=%d, i_sale=%d, s_color = '%s', s_size = '%s', i_stok=%d, dt_modified= '%s', fk_i_cat_id='%s',  fk_i_loc_id='%s',  i_level='%s'  WHERE pk_i_id='%s'",
+			$this->table, $data['s_name'], $data['s_slug'], $data['s_body'], $data['i_price'], $data['i_sale'], $data['s_color'], $data['s_size'], $data['i_stok'], $data['dt_modified'], $data['fk_i_cat_id'], $data['fk_i_loc_id'], $data['i_level'], $data['pk_i_id']
 		));
 		return $query;
 	}
@@ -201,6 +222,7 @@ class Product extends CI_Model
                 dt_modified,
                 i_type,
                 fk_i_cat_id,
+                fk_i_loc_id,
                 i_price,
                 s_size,
                 s_color,
@@ -208,14 +230,15 @@ class Product extends CI_Model
                 i_level,
                 i_sale
             )
-            values ('%s','%s','%s','%s','%s','2', '%s', %d, '%s', '%s', %d, %d, %d)",
+            values ('%s','%s','%s','%s','%s','2', '%s', '%s', %d, '%s', '%s', %d, %d, %d)",
 			$this->table,
 			$data['s_name'],
 			$data['s_slug'],
 			$data['s_body'],
 			date('Y-m-d H:i:s'),
 			date('Y-m-d H:i:s'),
-			$data['fk_i_cat_id'],
+            $data['fk_i_cat_id'],
+            $data['fk_i_loc_id'],
 			$data['i_price'],
 			$data['s_size'],
 			$data['s_color'],
@@ -232,11 +255,11 @@ class Product extends CI_Model
 		return $query->result();
 	}
 
-	function findBySlug($slug)
-	{
-		$query = $this->db->query(sprintf("SELECT * FROM %s WHERE s_slug='%s'", $this->table, $slug));
-		return $query->result();
-	}
+    function findBySlug($slug)
+    {
+        $query = $this->db->query(sprintf("SELECT * FROM %s WHERE s_slug='%s'", $this->table, $slug));
+        return $query->result();
+    }
 
 	function deleteByid($id)
 	{

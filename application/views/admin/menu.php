@@ -18,8 +18,20 @@
                 </a>
             </div>
             <div class="menu">
+                <a class="link transition" href="/admin/location" title="Category">
+                    <div class="icon-map-marker"></div>
+                    <div class="smaller">Location</div>
+                </a>
+            </div>
+            <div class="menu">
                 <a class="link transition" href="/admin/product" title="article">
                     <div class="icon-pencil"></div>
+                    <div class="smaller">Store</div>
+                </a>
+            </div>
+            <div class="menu">
+                <a class="link transition" href="/admin/article" title="slider">
+                    <div class="icon-list-ul"></div>
                     <div class="smaller">Article</div>
                 </a>
             </div>

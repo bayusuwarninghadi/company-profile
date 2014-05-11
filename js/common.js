@@ -52,6 +52,7 @@ $(document).ready(function() {
         return true;
     });
     $('.to-top').click(function (ev) {
+        console.log('trigered');
         $("html, body").animate({scrollTop:0}, 1000);
     });
     $('img').error(function(ev){

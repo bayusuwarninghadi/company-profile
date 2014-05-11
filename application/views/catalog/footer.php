@@ -27,20 +27,21 @@
 </body>
 
 <footer>
-	<div class="container pad1">
-		<div class="to-top icon-arrow-up"></div>
-		<div class="center" style="margin-top: 40px;">
-			<a href="/about">About Us</a>
-			<a href="/contact">Contact Us</a>
-			<a href="/carrer">Carrer</a>
-			<a href="/page/29">Privacy policy</a>
-			<a href="/page/30">Terms of service</a>
-			<a href="<?=$setting['facebook_url']?>"><i class="icon-facebook-sign"></i></a>
-			<a href="<?=$setting['twitter_url']?>"><i class="icon-twitter-sign"></i></a>
-			<hr>
-			<small>COPYRIGHT &copy; 2013 FLOW SHOP. All Right Reserved</small>
+    <section class="gray-bg">
+        <div class="container">
+            <div class="center" style="margin-top: 40px;">
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact Us</a>
+                <a href="/carrer">Carrer</a>
+                <a href="/page/29">Privacy policy</a>
+                <a href="/page/30">Terms of service</a>
+                <a href="<?=$setting['facebook_url']?>"><i class="icon-facebook-sign"></i></a>
+                <a href="<?=$setting['twitter_url']?>"><i class="icon-twitter-sign"></i></a>
+                <hr>
+                <small>COPYRIGHT &copy; 2013 FLOW SHOP. All Right Reserved</small>
 
-		</div>
-	</div>
+            </div>
+        </div>
+    </section>
 </footer>
 </html>

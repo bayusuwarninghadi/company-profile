@@ -6,44 +6,54 @@ class CProduct extends General
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('category');
+        $this->load->model('category');
+        $this->load->model('location');
 		$this->load->model('product');
 	}
 
 	public function pages()
 	{
 		$data['id'] = $this->input->get('id');
-		if ($data['id']) {
+        $data['page'] = $this->input->post('page') ? $this->input->post('page') : 1;
+        $data['locations'] = $this->location->getLocations();
+        $data['s_key'] = $this->input->post('s_key');
+        $data['recent_product'] = (Array)$this->product->doSearch();
+
+
+        if ($data['id']) {
 			$this->product->setId($data['id']);
 			$article = (Array)$this->product->doSearch();
 			if (!$article) {
 				$this->doView('404');
 				return;
 			}
-			$data['page'] = $article[0];
-			$data['pages'] = (Array)$this->product->listAllbyCat($data['page']->fk_i_cat_id);
-			$data['title'] = $article[0]->s_name;
+			$data['article'] = $article[0];
+            $data['breadcrumb'] = '<li>'.breadcrumbs('</li><li>','Home','/product'.$data['article']->s_cat_url).'</li>';
+            $data['cat'] = $data['article']->fk_i_cat_id ? $data['article']->fk_i_loc_id : 0;
+            $data['loc'] = $data['article']->fk_i_loc_id ? $data['article']->fk_i_loc_id : 0;
+            $data['title'] = $article[0]->s_name;
 		} else {
-			$url = substr($_SERVER['REQUEST_URI'], '9');
+            $data['loc'] = $this->input->post('fk_i_loc_id') ? $this->input->post('fk_i_loc_id') : 0;
+
+            $data['cat'] = $this->input->post('fk_i_cat_id') ? $this->input->post('fk_i_cat_id') : 0;
+
+            $url = substr($_SERVER['REQUEST_URI'], '8');
 			if ($url != '') {
-				$this->load->model('category');
-				$catProduct = $this->category->findBySlug($url);
+				$catProduct = $this->category->findByUrl($url);
 				if (!$catProduct) {
 					$this->doView('404');
 					return;
 				}
 				$data['cat'] = $catProduct[0]->pk_i_id;
-			} else {
-				$data['cat'] = 0;
 			}
+            $data['inCategories'] = $this->category->getChildIdCategories($data['cat']);
+            $data['inLocations'] = $this->location->getChildIdLocations($data['loc']);
 
-			$data['inCategories'] = $this->category->getChildIdCategories($data['cat']);
 
-			$this->product->setPageLength(20);
-			$data['recent_product'] = (Array)$this->product->doSearch();
-			$this->product->setCat($data['inCategories']);
+            $this->product->setCat($data['inCategories']);
+            $this->product->setLoc($data['inLocations']);
 
-			$data['isLogin'] = $this->session->userdata('isLogin');
+            $data['isLogin'] = $this->session->userdata('isLogin');
 
 			$level = array('1');
 			if ($data['isLogin']) {
@@ -52,12 +62,9 @@ class CProduct extends General
 
 			$this->product->setLevel($level);
 
-			$data['page'] = $this->input->post('page');
-
 			if (!is_numeric($data['page']) || $data['page'] == '' || $data['page'] < 1) $data['page'] = 1;
 			$this->product->setPage($data['page']);
 
-			$data['s_key'] = $this->input->post('s_key');
 			if ($data['s_key'] != '') {
 				$this->product->setKey($data['s_key']);
 			}

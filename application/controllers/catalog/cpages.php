@@ -26,7 +26,7 @@ class CPages extends General
 
 	    $this->load->model('gallery');
 	    $album = (Array)$this->gallery->listAll();
-	    $lates_album = $album[0];
+        $lates_album = $album[0];
 	    $config = array(
 		    'path' => 'images/gallery/' . $lates_album->pk_i_id
 	    );

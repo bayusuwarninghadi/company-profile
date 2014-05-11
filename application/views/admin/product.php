@@ -35,9 +35,13 @@
 		        <input name="i_level" type="radio" value="1" checked="checked">All
 		        <input name="i_level" type="radio" value="2" <?php if ($page->i_level == 2) echo "checked='checked'"; ?>>Member
 		    </div>
-	        <div class="row">
+            <div class="row">
                 <label>Category</label>
                 <? $this->load->view('admin/category-cb')?>
+            </div>
+            <div class="row">
+                <label>Location</label>
+                <? $this->load->view('admin/location-cb')?>
             </div>
             <div class="row">
                 <label>Content</label>
@@ -75,6 +79,10 @@
                 <? $this->load->view('admin/category-cb')?>
             </div>
             <div class="row">
+                <label>Location</label>
+                <? $this->load->view('admin/location-cb')?>
+            </div>
+            <div class="row">
                 <label>Content</label>
                 <textarea class="ckeditor" name="s_body" id="s_body"></textarea>
             </div>
@@ -90,6 +98,10 @@
             <div class="fleft row picker">
                 <label>Category</label>
                 <? $this->load->view('admin/category-cb')?>
+            </div>
+            <div class="fleft row picker">
+                <label>Location</label>
+                <? $this->load->view('admin/location-cb')?>
             </div>
             <div class="fleft row">
                 <label>Search</label>

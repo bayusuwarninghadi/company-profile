@@ -3,19 +3,19 @@
 <link rel="stylesheet" href="/js/nivo-slider/themes/default/default.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="/js/nivo-slider/themes/bar/bar.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="/js/nivo-slider/nivo-slider.css" type="text/css" media="screen"/>
-
-<div class="slider shadow" style="margin-top: -12px;">
-	<div class="slider-wrapper theme-default">
-		<div id="slider" class="nivoSlider">
-			<? foreach ($slider as $item) { ?>
-			<a href="<?=$item->s_link?>">
-				<img src="/images/slider/thumbs/<?=$item->s_image?>" data-thumb="/images/slider/<?=$item->s_image?>"
-				     alt="" title="<?=$item->s_name?>"/>
-			</a>
-			<? } ?>
-		</div>
-	</div>
 </div>
+<section class="slider shadow">
+    <div class="slider-wrapper theme-default">
+        <div id="slider" class="nivoSlider">
+            <? foreach ($slider as $item) { ?>
+                <a href="<?=$item->s_link?>">
+                    <img src="/images/slider/thumbs/<?=$item->s_image?>" data-thumb="/images/slider/<?=$item->s_image?>"
+                         alt="" title="<?=$item->s_name?>"/>
+                </a>
+            <? } ?>
+        </div>
+    </div>
+</section>
 
 <div class="center navbar-home">
 	<div data-href="" class="transition navbar-home-menu"><i class="icon-wrench"></i>&nbsp; slider</div>
@@ -31,12 +31,6 @@
 			 <hr>
 			 <small>"<?=$setting['tagline']?>"</small>
 		 </h1>
-		 <div class="pad01 center" style="line-height: 200%; font-size: 120%;">
-			 <iframe width="560" height="315" src="//<?=$setting['youtube_url']?>" frameborder="0" allowfullscreen></iframe>
-
-			 <?=$promo->s_body?>
-			 <div class="clear"></div>
-		 </div>
 	 </div>
 </div>
 
@@ -95,6 +89,8 @@
 		</div>
 	</div>
 </div>
+<div class="container">
+
 <style type="text/css">
 	.main-container { padding-bottom: 0;}
 	.preview {
