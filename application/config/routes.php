@@ -54,6 +54,11 @@ $route['contact'] = "catalog/cusernonsecure/contact";
 $route['admin/product'] = 'admin/cproduct/pages';
 $route['admin/product/(:any)'] = 'admin/cproduct/pages/$1';
 
+$route['article'] = "catalog/carticle/pages";
+$route['article/(:any)'] = 'catalog/carticle/pages/$1';
+$route['admin/article'] = 'admin/carticle/pages';
+$route['admin/article/(:any)'] = 'admin/carticle/pages/$1';
+
 $route['product'] = "catalog/cproduct/pages";
 $route['product/(:any)'] = 'catalog/cproduct/pages/$1';
 
@@ -83,6 +88,9 @@ $route['admin/gallery/(:any)'] = 'admin/cgallery/pages/$1';
 
 $route['admin/category'] = 'admin/ccategory/pages';
 $route['admin/category/(:any)'] = 'admin/ccategory/pages/$1';
+
+$route['admin/location'] = 'admin/clocation/pages';
+$route['admin/location/(:any)'] = 'admin/clocation/pages/$1';
 
 $route['admin/pages'] = 'admin/cpages/pages';
 $route['admin/pages/(:any)'] = 'admin/cpages/pages/$1';
