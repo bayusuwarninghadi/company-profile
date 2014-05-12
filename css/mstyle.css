@@ -1,6 +1,0 @@
-@media only screen and (max-width : 1000px) {
-    .desktop { display: none !important; }
-    .container { margin: 10px;}
-    .slider .theme-default .nivoSlider { height: 300px}
-}
-

@@ -57,6 +57,9 @@ $route['admin/product/(:any)'] = 'admin/cproduct/pages/$1';
 $route['product'] = "catalog/cproduct/pages";
 $route['product/(:any)'] = 'catalog/cproduct/pages/$1';
 
+$route['gallery'] = "catalog/cgallery/pages";
+$route['gallery/(:any)'] = 'catalog/cgallery/album/$1';
+
 $route['profile'] = "catalog/cuser/profile";
 
 $route['change_email'] = "catalog/cuser/change_email";

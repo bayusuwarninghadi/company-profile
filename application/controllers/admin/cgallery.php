@@ -33,8 +33,10 @@ class CGallery extends CAdmin
 							'path' => 'images/gallery/' . $data['pk_i_id']
 						);
 						$this->load->model('fupload', '', false, $config);
-						$this->fupload->do_multiple_upload($_FILES['s_image']);
-					} else {
+						$multiupload = $this->fupload->do_multiple_upload($_FILES['s_image']);
+                        $data['s_primary'] = $multiupload;
+                        $this->pages->updateById($data);
+                    } else {
 						$msg = 'data is invalid';
 						$redirect = '/admin/gallery/new';
 					}
@@ -57,8 +59,8 @@ class CGallery extends CAdmin
 					$post_ = $this->prepareData($post_);
 					$data = array_merge($data, $post_);
 
-					$this->fupload->do_multiple_upload($_FILES['s_image']);
-
+					$multiupload = $this->fupload->do_multiple_upload($_FILES['s_image']);
+                    $data['s_primary'] = $multiupload;
 					$exec = $this->pages->updateById($data);
 					if ($exec == 1) {
 						$msg = 'success';
@@ -85,11 +87,19 @@ class CGallery extends CAdmin
 					$this->session->set_userdata(array('adminMessage' => 'item not found'));
 					header("Location: /admin/gallery");
 				}
-				if ($page[0]->s_image) {
-					$this->fupload->delete_file($page[0]->s_image);
-				}
+                $dir = 'images/gallery/'.$data['pk_i_id'];
+                $files = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
+                    RecursiveIteratorIterator::CHILD_FIRST
+                );
 
-				$page = $this->pages->deleteByid($data['pk_i_id']);
+                foreach ($files as $fileinfo) {
+                    $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+                    $todo($fileinfo->getPathname());
+                }
+
+                rmdir($dir);
+                $page = $this->pages->deleteByid($data['pk_i_id']);
 				if ($page == 1) {
 					$msg = 'deleted success';
 				} else {
@@ -118,7 +128,7 @@ class CGallery extends CAdmin
 		}
 
 		$data['s_name'] = $this->input->post('s_name');
-		$data['s_body'] = $this->input->post('s_body');
+        $data['s_body'] = $this->input->post('s_body');
 		return $data;
 	}
 }

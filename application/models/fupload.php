@@ -56,7 +56,8 @@ class Fupload extends CI_Model
 				'tmp_name' => $arr_files['tmp_name'][$h],
 				'error' => $arr_files['error'][$h],
 				'size' => $arr_files['size'][$h]);
-		}
+            $primary = $arr_files['name'][$h];
+        }
 
 		$this->load->library('upload');
 
@@ -64,7 +65,6 @@ class Fupload extends CI_Model
 			'upload_path' => $this->gallery_path);
 
 		foreach (array_keys($_FILES) as $h) {
-
 			$this->upload->initialize($arr_config);
 			if ($this->upload->do_upload($h)) {
 				$image_data = $this->upload->data();
@@ -78,10 +78,11 @@ class Fupload extends CI_Model
 					$this->load->library('image_lib', $config);
 					$this->image_lib->initialize($config);
 
-					$this->image_lib->resize();
+                    $this->image_lib->resize();
 				}
 			}
 		}
+        return $primary;
 	}
 
 

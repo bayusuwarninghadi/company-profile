@@ -110,4 +110,34 @@ function mail_beauty($content, $signature)
 	return $return;
 }
 
+// This function will take $_SERVER['REQUEST_URI'] and build a breadcrumb based on the user's current path
+function breadcrumbs($separator = ' / ', $home = 'Home', $url = '') {
+    $url = $url == '' ? $_SERVER['REQUEST_URI'] : $url;
+    // This gets the REQUEST_URI (/path/to/file.php), splits the string (using '/') into an array, and then filters out any empty values
+    $path = array_filter(explode('/', parse_url($url, PHP_URL_PATH)));
+
+    $base = 'http://'.$_SERVER['HTTP_HOST'] . '/';
+
+    // Initialize a temporary array with our breadcrumbs. (starting with our home page, which I'm assuming will be the base URL)
+    $breadcrumbs = Array("<li><a href=\"$base\">$home</a></li>");
+
+    // Find out the index for the last value in our path array
+    $last = end(array_keys($path));
+
+    // Build the rest of the breadcrumbs
+    $url = '';
+    foreach ($path AS $x => $crumb) {
+        // Our "title" is the text that will be displayed (strip out .php and turn '_' into a space)
+        $title = ucwords(str_replace(Array('.php', '_'), Array('', ' '), $crumb));
+        $url = $url == '' ? $url.=$crumb : $url.= '/'.$crumb;
+        // If we are not on the last index, then display an <a> tag
+        $breadcrumbs[] = "<a href=\"$base$url\">$title</a>";
+
+    }
+
+    // Build our temporary array (pieces of bread) into one big string :)
+    return implode($separator, $breadcrumbs);
+}
+
+
 ?>

@@ -1,27 +1,26 @@
-<div class="container white round2 shadow wood-pattern">
-    <div class="pad1">
-        <div class="fleft banner">
-            <h1>Contact Us</h1>
-            <hr>
-            <?=$store->s_body?>
-        </div>
-        <form action="/contact" class="fleft" id="loginForm" method="post">
-            <div class="field">
-                <div class="label">Name</div>
-                <input type="text" value="<?=@$loggedUser->s_name?>" name="s_name">
-            </div>
-            <div class="field">
-                <div class="label">Email</div>
-                <input type="text" value="<?=@$loggedUser->s_email?>" name="s_email">
-            </div>
-            <div class="field">
-                <div class="label">Message</div>
-                <textarea name="s_message" style="width: 350px; height: 200px;"></textarea>
-            </div>
-            <input type="submit" value="Send">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1 class="panel-title">Contact Us</h1>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <form action="/contact" id="loginForm" method="post">
+                <div class="form-group">
+                    <label for="s_name">Name</label>
+                    <input type="text" class="form-control" value="<?=@$loggedUser->s_name?>" name="s_name">
+                </div>
+                <div class="form-group">
+                    <label for="s_email">Email</label>
+                    <input type="text" class="form-control" value="<?=@$loggedUser->s_email?>" name="s_email">
+                </div>
+                <div class="form-group">
+                    <label for="s_message">Message</label>
+                    <textarea name="s_message" class="form-control"></textarea>
+                </div>
+                <input type="submit" value="Send">
 
-            <div class="clear"></div>
-        </form>
-        <div class="clear"></div>
+                <div class="clear"></div>
+            </form>
+        </div>
     </div>
 </div>

@@ -32,8 +32,8 @@ class Gallery extends CI_Model
     function updateById($data = array())
     {
         $query = $this->db->query(sprintf("
-            UPDATE %s SET s_name='%s', s_body='%s' WHERE pk_i_id='%s'",
-            $this->table, $data['s_name'], $data['s_body'], $data['pk_i_id']
+            UPDATE %s SET s_name='%s', s_body='%s', s_primary ='%s' WHERE pk_i_id='%s'",
+            $this->table, $data['s_name'], $data['s_body'], $data['s_primary'], $data['pk_i_id']
         ));
         return $query;
     }

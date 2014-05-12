@@ -16,10 +16,9 @@
 			</div>
 			<div class="row">
 				<? foreach ($images as $image) { ?>
-				<div style="background-image: url('<?=$image['thumb_url'];?>') " class="preview fleft"></div>
+    				<div style="background-image: url('<?=$image['thumb_url'];?>') " class="preview fleft"></div>
 				<?}?>
 				<div class="clear"></div>
-
 			</div>
 
 			<div class="row">
@@ -32,18 +31,24 @@
 		<h3>Post New</h3>
 		<form action="/admin/gallery/new" id="pageNew" enctype="multipart/form-data" method="post">
 			<div class="row">
-				<input type="file" name="s_image[]" multiple accept="image/*" />
-			</div>
-
-			<div class="row">
 				<label>Name</label>
 				<input name="s_name" type="text">
 			</div>
+
 			<div class="row">
 				<label>Content</label>
 				<textarea class="ckeditor" name="s_body" id="s_body"></textarea>
 			</div>
-			<?php echo form_submit('upload', 'Upload'); ?>
+            <div class="row">
+                <div style="background-color: #fff;" class="preview fleft"></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="row">
+                <input type="file" name="s_image[]" multiple accept="image/*" />
+            </div>
+
+            <?php echo form_submit('upload', 'Upload'); ?>
 		</form>
 		<?php } else { ?>
 		<h1 class="fleft">gallerys</h1>

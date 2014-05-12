@@ -1,5 +1,5 @@
 /*
- * jQuery Nivo Slider v3.1
+ * jQuery Nivo Slider v3.2
  * http://nivo.dev7studios.com
  *
  * Copyright 2012, Dev7studios
@@ -8,16 +8,6 @@
  */
  
 /* The Nivo Slider styles */
-.slider-wrapper {
-    position: relative;
-    z-index: 2;
-}
-.slider-wrapper .nivo-controlNav {
-    position: absolute;
-    padding: 10px;
-    top: 0;
-    z-index: 5
-}
 .nivoSlider {
 	position:relative;
 	width:100%;
@@ -48,6 +38,9 @@
 	margin:0;
 	z-index:6;
 	display:none;
+	background:white; 
+	filter:alpha(opacity=0); 
+	opacity:0;
 }
 /* The slices and boxes in the Slider */
 .nivo-slice {
@@ -68,14 +61,13 @@
 /* Caption styles */
 .nivo-caption {
 	position:absolute;
-	right:0px;
-	top:50px;
+	left:0px;
+	bottom:0px;
 	background:#000;
 	color:#fff;
-	width:50%;
+	width:100%;
 	z-index:8;
-	padding: 20px;
-    font-size: 30px;
+	padding: 5px 10px;
 	opacity: 0.8;
 	overflow: hidden;
 	display: none;

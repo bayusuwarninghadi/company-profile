@@ -3,76 +3,76 @@ require 'general.php';
 class CProduct extends General
 {
 
-	function __construct()
-	{
-		parent::__construct();
-		$this->load->model('category');
-		$this->load->model('product');
-	}
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->model('category');
+        $this->load->model('product');
+    }
 
-	public function pages()
-	{
-		$data['id'] = $this->input->get('id');
-		if ($data['id']) {
-			$this->product->setId($data['id']);
-			$article = (Array)$this->product->doSearch();
-			if (!$article) {
-				$this->doView('404');
-				return;
-			}
-			$data['page'] = $article[0];
-			$data['pages'] = (Array)$this->product->listAllbyCat($data['page']->fk_i_cat_id);
-			$data['title'] = $article[0]->s_name;
-		} else {
-			$url = substr($_SERVER['REQUEST_URI'], '9');
-			if ($url != '') {
-				$this->load->model('category');
-				$catProduct = $this->category->findBySlug($url);
-				if (!$catProduct) {
-					$this->doView('404');
-					return;
-				}
-				$data['cat'] = $catProduct[0]->pk_i_id;
-			} else {
-				$data['cat'] = 0;
-			}
+    public function pages()
+    {
+        $data['id'] = $this->input->get('id');
+        $data['page'] = $this->input->post('page') ? $this->input->post('page') : 1;
+        $data['s_key'] = $this->input->post('s_key');
+        $data['recent_product'] = (Array)$this->product->doSearch();
 
-			$data['inCategories'] = $this->category->getChildIdCategories($data['cat']);
 
-			$this->product->setPageLength(20);
-			$data['recent_product'] = (Array)$this->product->doSearch();
-			$this->product->setCat($data['inCategories']);
+        if ($data['id']) {
+            $this->product->setId($data['id']);
+            $article = (Array)$this->product->doSearch();
+            if (!$article) {
+                $this->doView('404');
+                return;
+            }
+            $data['article'] = $article[0];
+            $data['breadcrumb'] = '<li>'.breadcrumbs('</li><li>','Home','/product'.$data['article']->s_cat_url).'</li>';
+            $data['cat'] = $data['article']->fk_i_cat_id ? $data['article']->fk_i_cat_id : 0;
+            $data['title'] = $article[0]->s_name;
+        } else {
+            $data['cat'] = $this->input->post('fk_i_cat_id') ? $this->input->post('fk_i_cat_id') : 0;
 
-			$data['isLogin'] = $this->session->userdata('isLogin');
+            $url = substr($_SERVER['REQUEST_URI'], '8');
+            if ($url != '') {
+                $catProduct = $this->category->findByUrl($url);
+                if (!$catProduct) {
+                    $this->doView('404');
+                    return;
+                }
+                $data['cat'] = $catProduct[0]->pk_i_id;
+            }
+            $data['inCategories'] = $this->category->getChildIdCategories($data['cat']);
 
-			$level = array('1');
-			if ($data['isLogin']) {
-				array_push($level, '2');
-			}
 
-			$this->product->setLevel($level);
+            $this->product->setCat($data['inCategories']);
 
-			$data['page'] = $this->input->post('page');
+            $data['isLogin'] = $this->session->userdata('isLogin');
 
-			if (!is_numeric($data['page']) || $data['page'] == '' || $data['page'] < 1) $data['page'] = 1;
-			$this->product->setPage($data['page']);
+            $level = array('1');
+            if ($data['isLogin']) {
+                array_push($level, '2');
+            }
 
-			$data['s_key'] = $this->input->post('s_key');
-			if ($data['s_key'] != '') {
-				$this->product->setKey($data['s_key']);
-			}
+            $this->product->setLevel($level);
 
-			$data['product'] = (Array)$this->product->doSearch();
-			$data['title'] = 'Product';
-		}
-		$data['list'] = 'product';
-		if (IS_AJAX) {
-			$this->load->view('catalog/list', $data);
-		} else {
-			$this->doView('product', $data);
-		}
+            if (!is_numeric($data['page']) || $data['page'] == '' || $data['page'] < 1) $data['page'] = 1;
+            $this->product->setPage($data['page']);
 
-	}
+            if ($data['s_key'] != '') {
+                $this->product->setKey($data['s_key']);
+            }
+
+            $data['product'] = (Array)$this->product->doSearch();
+            $data['title'] = 'Product';
+        }
+        $data['list'] = 'product';
+        if (IS_AJAX) {
+            $this->load->view('catalog/list', $data);
+        } else {
+            $this->doView('product', $data);
+        }
+
+    }
 
 }
 
